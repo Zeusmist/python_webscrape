@@ -1,5 +1,6 @@
 from urllib.request import urlopen as urlRequest
 from bs4 import BeautifulSoup as soup
+import csv
 
 newegg_url = "https://www.newegg.com/p/pl?d=graphics+card"
 
@@ -56,15 +57,14 @@ for container in containers:
 
 # add data to csv
 print("adding data to csv")
-
 filename = "scraped_products.csv"
-fileWriter = open(filename, "w")
-headers = "image_url, title, brand, price\n"
-fileWriter.write(headers)
+fileWriter = csv.writer(open(filename, "w", newline=""))
+headers = ["image_url", "title", "brand", "price"]
+fileWriter.writerow(headers)
 
 for res in final_results:
-    fileWriter.write(res["image_url"] + "," + res["title"].replace(",", "-") + "," +
-                     res["brand"] + "," + res["price"] + "\n")
-fileWriter.close()
+    fileWriter.writerow([res["image_url"], res["title"],
+                        res["price"], res["brand"]])
+# fileWriter.close()
 
 print("total eligible items added = " + str(len(final_results)))
